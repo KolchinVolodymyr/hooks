@@ -1,21 +1,35 @@
 import './App.css';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 
-let renderCount = 1
+function complexCompute(num) {
+    let i = 0
+    while(i<1000000000) i++
+    return num*2
+}
 
 function App() {
 
-   // const [renderCount, setRenderCount] = useState();
-    const [value, setValue] = useState('initial');
-    const renderCount = useRef(1);
+    const [number, setNumber] = useState(42);
+    const [colored, setColored] = useState(false);
+
+    const styles = useMemo(()=>({
+        color: colored ? 'darkred' : 'black'
+    }), [colored])
+
+    const computed = useMemo(()=>{
+        return complexCompute(number)
+    }, [number])
 
     useEffect(()=>{
-        renderCount.current++
-    })
+        console.log('Style changed')
+    }, [styles])
+
     return (
         <div>
-            <h1>Render Count: {renderCount.current}</h1>
-            <input type="text" onChange={e => setValue(e.target.value)} value={value}/>
+            <h1 style={styles}>Count: {computed}</h1>
+            <button className="btn btn-success" onClick={()=>{setNumber(prev=>prev+1)}}>+</button>
+            <button className="btn btn-success" onClick={()=>{setNumber(prev=>prev-1)}}>-</button>
+            <button className="btn btn-success" onClick={()=>{setColored(prev=>!prev)}}>Change</button>
         </div>
         )
     }
