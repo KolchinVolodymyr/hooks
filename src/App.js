@@ -1,35 +1,32 @@
 import './App.css';
 import React, {useState, useEffect, useMemo} from 'react';
 
-function complexCompute(num) {
-    let i = 0
-    while(i<1000000000) i++
-    return num*2
+function useLogger(value) {
+    useEffect(()=> {
+        console.log('Value changed:', value);
+    }, [value])
 }
 
+function useInput (initialValue) {
+    const [value, setValue] = useState('');
+
+    const onChange = event => {
+        setValue(event.target.value)
+    }
+
+    return {
+        value, onChange
+    }
+}
 function App() {
+    const input = useInput('');
 
-    const [number, setNumber] = useState(42);
-    const [colored, setColored] = useState(false);
-
-    const styles = useMemo(()=>({
-        color: colored ? 'darkred' : 'black'
-    }), [colored])
-
-    const computed = useMemo(()=>{
-        return complexCompute(number)
-    }, [number])
-
-    useEffect(()=>{
-        console.log('Style changed')
-    }, [styles])
+    useLogger(input.value);
 
     return (
-        <div>
-            <h1 style={styles}>Count: {computed}</h1>
-            <button className="btn btn-success" onClick={()=>{setNumber(prev=>prev+1)}}>+</button>
-            <button className="btn btn-success" onClick={()=>{setNumber(prev=>prev-1)}}>-</button>
-            <button className="btn btn-success" onClick={()=>{setColored(prev=>!prev)}}>Change</button>
+        <div className={'container pt-3'}>
+            <input type='text' value={input.value} onChange={input.onChange}/>
+            <h1>{input.value}</h1>
         </div>
         )
     }
