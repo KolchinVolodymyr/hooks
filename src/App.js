@@ -1,33 +1,21 @@
 import './App.css';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+
+let renderCount = 1
 
 function App() {
-//    const [counter, setCounter] = useState(0);
-//    function increment() {
-////        setCounter(counter+1)
-////        setCounter(counter+1)
-//        setCounter((prevCounter)=>{
-//            return prevCounter + 1
-//        })
-//        setCounter(prev => prev +1)
-//    }
-//    function decrement() {
-//        setCounter(counter-1)
-//    }
-    const [type, setType] = useState('users');
-    const [data, setData] = useState('users');
+
+   // const [renderCount, setRenderCount] = useState();
+    const [value, setValue] = useState('initial');
+    const renderCount = useRef(1);
+
     useEffect(()=>{
-        fetch(`https://jsonplaceholder.typicode.com/${type}`)
-         .then(response => response.json())
-         .then(json => setData(json))
-    }, [type])
+        renderCount.current++
+    })
     return (
         <div>
-            <h1>Ресурс: {type}</h1>
-            <button onClick={()=>{setType('users')}}>Users</button>
-            <button onClick={()=>{setType('todos')}}>Todo</button>
-            <button onClick={()=>{setType('posts')}}>Post</button>
-            <pre>{JSON.stringify(data, null, )}</pre>
+            <h1>Render Count: {renderCount.current}</h1>
+            <input type="text" onChange={e => setValue(e.target.value)} value={value}/>
         </div>
         )
     }
